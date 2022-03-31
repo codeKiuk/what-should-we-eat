@@ -17,13 +17,13 @@ export default defineComponent({
       const res = await googleLogin();
 
       if (res.error) {
-        this.$store.commit("setLoggedIn", false);
+        this.$store.commit("UserStore/setLoggedIn", false);
         return;
       }
 
       this.$router.replace("home");
-      this.$store.commit("setLoggedIn", true);
-      this.$store.commit("setCurrentUser", res.currentUser);
+      this.$store.commit("UserStore/setLoggedIn", true);
+      this.$store.commit("UserStore/setCurrentUser", res.currentUser);
     },
   },
 });

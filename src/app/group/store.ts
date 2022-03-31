@@ -6,6 +6,7 @@ import { Module } from "vuex";
 import { IRootStore } from "../store";
 
 const GroupStore: Module<IGroupStore, IRootStore> = {
+  namespaced: true,
   state: () =>
     ({
       groups: [],

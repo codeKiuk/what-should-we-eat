@@ -4,6 +4,7 @@ import mutations from "./mutations";
 import { IUserStore } from "./types";
 
 const UserStore = {
+  namespaced: true,
   state: () =>
     ({
       isLoggedIn: false,

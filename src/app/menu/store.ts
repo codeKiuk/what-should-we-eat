@@ -4,6 +4,7 @@ import actions from "./actions";
 import { IMenuStore } from "./types";
 
 const MenuStore = {
+  namespaced: true,
   state: () => ({} as IMenuStore),
   getters,
   mutations,

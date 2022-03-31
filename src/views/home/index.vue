@@ -16,18 +16,18 @@ import MenuList from "./menu-list/index.vue";
 export default defineComponent({
   async setup() {
     const store = useStore();
-    store.dispatch("getGroupsAsync");
-    store.dispatch("getMenusAsync");
+    store.dispatch("GroupStore/getGroupsAsync");
+    store.dispatch("MenuStore/getMenusAsync");
   },
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Home",
   components: { GroupList, MenuList },
   methods: {
     getGroups() {
-      this.$store.dispatch("getGroupsAsync");
+      this.$store.dispatch("GroupStore/getGroupsAsync");
     },
     getMenus() {
-      this.$store.dispatch("getMenusAsync");
+      this.$store.dispatch("MenuStore/getMenusAsync");
     },
   },
 });
