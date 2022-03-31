@@ -1,6 +1,6 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
-import Home from "../views/home/Home.vue";
-import Login from "../views/login/Login.vue";
+import Home from "../views/home/index.vue";
+import Login from "../views/login/index.vue";
 import { firebaseAuth } from "@/main";
 
 const routes: Array<RouteRecordRaw> = [
