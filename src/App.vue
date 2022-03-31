@@ -4,7 +4,16 @@
       <router-link to="/home">What Should We Eat ?</router-link>
     </nav>
   </header>
-  <router-view />
+
+  <Suspense>
+    <template #default>
+      <router-view />
+    </template>
+
+    <template #fallback>
+      <span>Loading...</span>
+    </template>
+  </Suspense>
 </template>
 
 <script lang="ts">

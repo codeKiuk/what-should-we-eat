@@ -1,5 +1,5 @@
 import { IGroupStore } from "./types";
 
 export default {
-  getMenus: (state: IGroupStore) => state.groups,
+  getGroups: (state: IGroupStore) => state.groups,
 };
