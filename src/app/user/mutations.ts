@@ -1,5 +1,11 @@
-import { ITodoState } from "./types";
+import { IUser, IUserStore } from "./types";
 
-export const increment = (state: ITodoState) => {
-  state.count++;
+export default {
+  setLoggedIn: (state: IUserStore, isLoggedIn: boolean) => {
+    state.isLoggedIn = isLoggedIn;
+  },
+
+  setCurrentUser: (state: IUserStore, currentUser: IUser) => {
+    state.currentUser = currentUser;
+  },
 };

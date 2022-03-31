@@ -1,8 +1,17 @@
-import * as mutations from "./mutations";
+import actions from "./actions";
+import getters from "./getters";
+import mutations from "./mutations";
+import { IUserStore } from "./types";
 
 const UserStore = {
-  state: () => ({ count: 0 }),
+  state: () =>
+    ({
+      isLoggedIn: false,
+      currentUser: { name: "", email: "", uid: "" },
+    } as IUserStore),
+  getters: getters,
   mutations: mutations,
+  actions: actions,
 };
 
 export default UserStore;
