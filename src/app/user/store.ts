@@ -1,8 +1,8 @@
 import * as mutations from "./mutations";
 
-const TodoStore = {
+const UserStore = {
   state: () => ({ count: 0 }),
   mutations: mutations,
 };
 
-export default TodoStore;
+export default UserStore;

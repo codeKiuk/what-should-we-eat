@@ -1,21 +1,26 @@
 <template>
   <div>
-    <nav>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </nav>
-    <router-view />
+    <header>
+      <nav>
+        <router-link to="/">What Should We Eat ?</router-link>
+      </nav>
+      <Login />
+    </header>
+    <Home />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "@vue/runtime-core";
+import Home from "./views/home/index.vue";
+import Login from "./views/login/index.vue";
 
 export default defineComponent({
   data() {
     return {};
   },
   methods: {},
+  components: { Home, Login },
 });
 </script>
 

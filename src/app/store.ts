@@ -1,8 +1,8 @@
 import { createStore } from "vuex";
-import TodoStore from "./todo/store";
+import UserStore from "./user/store";
 
 const store = createStore({
-  modules: { TodoStore },
+  modules: { UserStore },
 });
 
 export default store;
