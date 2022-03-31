@@ -1,6 +1,6 @@
 <template>
   <header>
-    <button type="text">메뉴 리스트 가져오기</button>
+    <button type="text" @click="getMenus">메뉴 리스트 가져오기</button>
     <button type="text" @click="getGroups">그룹 리스트 가져오기</button>
   </header>
   <GroupList groups="this.$store.GroupStore.groups" />
@@ -19,6 +19,9 @@ export default defineComponent({
   methods: {
     getGroups() {
       this.$store.dispatch("getGroupsAsync");
+    },
+    getMenus() {
+      this.$store.dispatch("getMenusAsync");
     },
   },
 });

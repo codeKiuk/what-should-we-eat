@@ -8,10 +8,6 @@ export const getGroups = async () => {
   return groups;
 };
 
-export const getGroup = async (groupId: string) => {
-  return null;
-};
-
 // const createGroup = () => {};
 
 // const deleteGroup = () => {};
