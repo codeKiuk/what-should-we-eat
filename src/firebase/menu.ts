@@ -4,6 +4,9 @@ import { db } from "@/main";
 export const getMenus = async () => {
   const q = query(collection(db, "Menu"));
   const querySnapshot = await getDocs(q);
-  const menus = querySnapshot.docs.map((doc) => doc.data());
+  const menus = querySnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
   return menus;
 };

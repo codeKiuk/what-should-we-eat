@@ -3,6 +3,7 @@ export interface IGroupStore {
 }
 
 export interface IGroup {
+  id: string;
   createdAt: Date | string;
   lead: string; // uid
   menu: string;

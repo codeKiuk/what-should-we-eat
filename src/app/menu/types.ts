@@ -3,5 +3,6 @@ export interface IMenuStore {
 }
 
 export interface IMenu {
+  id: string;
   name: string;
 }

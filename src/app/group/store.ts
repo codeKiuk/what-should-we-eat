@@ -8,7 +8,7 @@ import { IRootStore } from "../store";
 const GroupStore: Module<IGroupStore, IRootStore> = {
   state: () =>
     ({
-      groups: [{ lead: "", users: [], menu: "", createdAt: "" }],
+      groups: [],
     } as IGroupStore),
   mutations,
   actions,

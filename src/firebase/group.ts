@@ -4,7 +4,10 @@ import { db } from "@/main";
 export const getGroups = async () => {
   const q = query(collection(db, "Group"));
   const querySnapshot = await getDocs(q);
-  const groups = querySnapshot.docs.map((doc) => doc.data());
+  const groups = querySnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
   return groups;
 };
 
