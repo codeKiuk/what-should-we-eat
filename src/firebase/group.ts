@@ -10,8 +10,10 @@ import {
   deleteDoc,
   updateDoc,
   doc,
+  arrayUnion,
+  arrayRemove,
 } from "@firebase/firestore";
-import { db } from "@/main";
+import { db, firebaseAuth } from "@/main";
 
 export const getGroups = async () => {
   const date = new Date();
@@ -52,8 +54,28 @@ export const deleteGroup = async (id: string) => {
   }
 };
 
-// export const updateGroup = () => {};
+export const participateInGroup = async (id: string) => {
+  if (!firebaseAuth.currentUser) return;
 
-// export const participateInGroup = () => {};
+  try {
+    const currentUserId = firebaseAuth.currentUser.uid;
+    const docRef = await doc(db, "Group", id);
 
-// export const comeOutFromGroup = () => {};
+    await updateDoc(docRef, { users: arrayUnion(currentUserId) });
+  } catch (e) {
+    throw new Error("Failed to Participate in Group");
+  }
+};
+
+export const comeOutFromGroup = async (id: string) => {
+  if (!firebaseAuth.currentUser) return;
+
+  try {
+    const currentUserId = firebaseAuth.currentUser.uid;
+    const docRef = await doc(db, "Group", id);
+
+    await updateDoc(docRef, { users: arrayRemove(currentUserId) });
+  } catch (e) {
+    throw new Error("Failed to Come out from Group");
+  }
+};

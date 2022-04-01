@@ -11,7 +11,7 @@
     </template>
 
     <template #fallback>
-      <span>Loading...</span>
+      <h1>Loading...</h1>
     </template>
   </Suspense>
 </template>

@@ -38,9 +38,6 @@ export const googleLogin = async () => {
 };
 
 const addUser = async (currentUser: IUser) => {
-  if (currentUser.uid === firebaseAuth.currentUser?.uid) {
-    return;
-  }
   const docRef = await addDoc(collection(db, "User"), currentUser);
 };
 
