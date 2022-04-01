@@ -3,7 +3,7 @@ import {
   signInWithPopup,
   UserCredential,
 } from "@firebase/auth";
-import { addDoc, collection } from "@firebase/firestore";
+import { addDoc, collection, getDocs, query } from "@firebase/firestore";
 import { db, firebaseAuth } from "@/main";
 import { IUser } from "@/app/user/types";
 
@@ -39,6 +39,18 @@ export const googleLogin = async () => {
 
 const addUser = async (currentUser: IUser) => {
   const docRef = await addDoc(collection(db, "User"), currentUser);
+};
+
+export const getUsers = async () => {
+  try {
+    const q = query(collection(db, "User"));
+    const querySnapshot = await getDocs(q);
+
+    const users = querySnapshot.docs.map((doc) => doc.data());
+    return users;
+  } catch (e) {
+    throw new Error("Failed to get Users");
+  }
 };
 
 export default googleLogin;

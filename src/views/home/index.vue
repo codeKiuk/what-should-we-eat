@@ -18,13 +18,14 @@ import { ListType, TListType } from "./types";
 export default defineComponent({
   async setup() {
     const store = useStore();
+    await store.dispatch("UserStore/getUsersAsync");
     await Promise.all([
       store.dispatch("GroupStore/getGroupsAsync"),
       store.dispatch("MenuStore/getMenusAsync"),
     ]);
 
     return {
-      groups: store.getters["GroupStore/getGroups"],
+      groups: store.getters["GroupStore/getGroupsJoin"],
       menus: store.getters["MenuStore/getMenus"],
     };
   },

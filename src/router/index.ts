@@ -36,9 +36,16 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.name !== "Login" && !firebaseAuth.currentUser) {
+  if (
+    to.name !== "Login" &&
+    (!firebaseAuth.currentUser || firebaseAuth.currentUser.uid === "")
+  ) {
     next({ name: "Login" });
-  } else if (to.name === "Login" && firebaseAuth.currentUser) {
+  } else if (
+    to.name === "Login" &&
+    firebaseAuth.currentUser &&
+    firebaseAuth.currentUser.uid !== ""
+  ) {
     next({ name: "Home" });
   } else next();
 });

@@ -1,7 +1,7 @@
 <template>
   <ul>
     <li v-for="group in groups" :key="group.id">
-      {{ group.lead }}와 같이 먹어요!
+      {{ group.lead.name }}님이랑 같이 먹어요!
     </li>
   </ul>
 </template>

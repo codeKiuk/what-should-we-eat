@@ -9,6 +9,7 @@ const UserStore = {
     ({
       isLoggedIn: false,
       currentUser: { name: "", email: "", uid: "" },
+      users: [],
     } as IUserStore),
   getters: getters,
   mutations: mutations,
