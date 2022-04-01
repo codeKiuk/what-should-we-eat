@@ -47,7 +47,6 @@ export default defineComponent({
     },
     setListType(type: TListType) {
       this.$data.listType = type;
-      console.log("this.data.type: ", this.$data.listType);
     },
   },
   mounted() {

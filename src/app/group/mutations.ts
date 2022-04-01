@@ -11,4 +11,8 @@ export default {
   ) => {
     state.groups.push({ id, ...newGroup });
   },
+
+  deleteGroup: (state: IGroupStore, id: string) => {
+    state.groups.filter((group) => group.id !== id);
+  },
 };
