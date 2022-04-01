@@ -1,5 +1,6 @@
-import { collection, query, getDocs } from "@firebase/firestore";
+import { collection, query, getDocs, addDoc, doc } from "@firebase/firestore";
 import { db } from "@/main";
+import { IMenu, IMenuPayload } from "@/app/menu/types";
 
 export const getMenus = async () => {
   try {
@@ -12,5 +13,15 @@ export const getMenus = async () => {
     return menus;
   } catch (e) {
     throw new Error("Failed to get Menus");
+  }
+};
+
+export const createMenus = async (Menus: IMenuPayload[]) => {
+  try {
+    await Menus.forEach((menu) => {
+      addDoc(collection(db, "Menu"), menu);
+    });
+  } catch (e) {
+    throw new Error("Failed to Create Menus");
   }
 };

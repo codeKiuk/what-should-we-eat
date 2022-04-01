@@ -5,4 +5,10 @@ export interface IMenuStore {
 export interface IMenu {
   id: string;
   name: string;
+  imgSrc: string;
+}
+
+export interface IMenuPayload {
+  name: string;
+  imgSrc: string;
 }
