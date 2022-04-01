@@ -69,6 +69,11 @@ export default defineComponent({
 
     padding: 0 10px 10px 10px;
     margin: 1rem;
+
+    transition: 200ms ease-in-out;
+    &:hover {
+      transform: translateY(-10px);
+    }
   }
 
   .menu-image {

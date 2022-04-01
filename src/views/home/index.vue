@@ -33,7 +33,7 @@ export default defineComponent({
   name: "Home",
   data() {
     return {
-      listType: ListType.Groups,
+      listType: ListType.Menus,
     } as { listType: TListType };
   },
   components: { GroupList, MenuList },
@@ -76,6 +76,8 @@ button {
   box-shadow: whitesmoke 1px 2px 1px 0px;
   min-width: 100px;
   min-height: 30px;
+
+  font-weight: bold;
 
   &:hover {
     cursor: pointer;
