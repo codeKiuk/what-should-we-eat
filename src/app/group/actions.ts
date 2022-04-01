@@ -14,6 +14,6 @@ export default {
     newGroup: IGroupPayload
   ) => {
     const docRefId = await createGroup(newGroup);
-    state.commit("GroupStore/createGroup", { id: docRefId, ...newGroup });
+    state.commit("createGroup", { id: docRefId, ...newGroup });
   },
 };

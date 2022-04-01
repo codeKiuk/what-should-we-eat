@@ -3,15 +3,17 @@
     <button type="text" @click="getMenus">메뉴 리스트 가져오기</button>
     <button type="text" @click="getGroups">그룹 리스트 가져오기</button>
   </header>
-  <GroupList :groups="groups" />
-  <MenuList :menus="menus" />
+  <GroupList :groups="groups" v-if="listType === 'Groups'" />
+  <MenuList :menus="menus" v-else />
 </template>
 
 <script lang="ts">
+import { Timestamp } from "@firebase/firestore";
 import { defineComponent } from "vue";
 import { useStore } from "vuex";
 import GroupList from "./group-list/GroupList.vue";
 import MenuList from "./menu-list/MenuList.vue";
+import { ListType, TListType } from "./types";
 
 export default defineComponent({
   async setup() {
@@ -28,14 +30,36 @@ export default defineComponent({
   },
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Home",
+  data() {
+    return {
+      listType: ListType.Groups,
+    } as { listType: TListType };
+  },
   components: { GroupList, MenuList },
   methods: {
     getGroups() {
       this.$store.dispatch("GroupStore/getGroupsAsync");
+      this.setListType(ListType.Groups);
     },
     getMenus() {
       this.$store.dispatch("MenuStore/getMenusAsync");
+      this.setListType(ListType.Menus);
     },
+    setListType(type: TListType) {
+      this.$data.listType = type;
+      console.log("this.data.type: ", this.$data.listType);
+    },
+  },
+  mounted() {
+    /**
+    const newGroup = {
+      createdAt: Timestamp.now(),
+      menu: "menu-id",
+      users: ["userId", "uid"],
+      lead: "lead-id",
+    };
+    this.$store.dispatch("GroupStore/createGroupAsync", newGroup);
+     */
   },
 });
 </script>
