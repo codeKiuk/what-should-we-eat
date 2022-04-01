@@ -1,7 +1,7 @@
 <template>
   <header>
-    <button type="text" @click="getMenus">메뉴 리스트 가져오기</button>
-    <button type="text" @click="getGroups">그룹 리스트 가져오기</button>
+    <button type="text" @click="getMenus">메뉴</button>
+    <button type="text" @click="getGroups">점심 파티!</button>
   </header>
   <GroupList :groups="groups" v-if="listType === 'Groups'" />
   <MenuList :menus="menus" v-else />
