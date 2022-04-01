@@ -8,11 +8,28 @@
         />
         <span class="group-metadata-container">
           <span class="group-name">
-            <span class="group-name-detail detail">
-              {{ group.lead.name }}님</span
-            >
-            이랑 같이 먹어요!
+            <span class="group-name-detail detail"> {{ group.menu.name }}</span>
+            같이 먹어요!
           </span>
+
+          <ul class="member-container" v-if="group.users.length < 3">
+            <li
+              class="memeber-item"
+              v-for="user in group.users"
+              :key="user.uid"
+            >
+              <span class="member-detail detail">{{ user.name }}님</span>
+            </li>
+            <span class="">도 같이 먹어요.</span>
+          </ul>
+
+          <ul class="member-container" v-else>
+            <span class="">
+              <span class="detail">클릭</span>해서 같이 먹을 사람이 누군지
+              확인해요!</span
+            >
+          </ul>
+
           <span
             class="timestamp"
             v-if="
@@ -100,7 +117,7 @@ export default defineComponent({
     box-shadow: whitesmoke 1px 2px 1px 0px;
 
     width: 280px;
-    height: 260px;
+    height: 300px;
 
     padding: 0 10px 10px 10px;
     margin: 1rem;
@@ -120,8 +137,22 @@ export default defineComponent({
     }
   }
 
-  .group-metadata-container {
+  .member-container {
     display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    padding: 1rem 0;
+
+    .member-item {
+    }
+
+    .member-detail {
+      margin: 0 0 0 2px;
+    }
+  }
+
+  .group-metadata-container {
     flex-direction: column;
     align-items: flex-start;
 
@@ -140,6 +171,10 @@ export default defineComponent({
     .detail {
       font-weight: bold;
       @include mainGreenFont;
+
+      &:hover {
+        cursor: pointer;
+      }
     }
   }
 }

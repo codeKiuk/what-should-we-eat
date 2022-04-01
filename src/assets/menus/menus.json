@@ -1,6 +1,6 @@
 [
   {
-    "name": "국밥류",
+    "name": "국밥",
     "imgSrc": "gookbap"
   },
   {
@@ -24,7 +24,7 @@
     "imgSrc": "chinese-food"
   },
   {
-    "name": "멕시칸",
+    "name": "멕시칸 음식",
     "imgSrc": "mexican-food"
   },
   {
