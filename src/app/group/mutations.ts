@@ -1,3 +1,4 @@
+import { Timestamp } from "firebase/firestore";
 import { IGroup, IGroupPayload, IGroupStore } from "./types";
 
 export default {
@@ -21,7 +22,11 @@ export default {
     { currentUserId, groupId }: { currentUserId: string; groupId: string }
   ) => {
     state.groups = state.groups.map((group) => {
-      if (group.id === groupId) {
+      if (
+        group.id === groupId &&
+        !group.users.includes(currentUserId) &&
+        group.createdAt.toMillis() + 60000 * 20 > Timestamp.now().toMillis()
+      ) {
         return {
           ...group,
           users: group.users.concat([currentUserId]),

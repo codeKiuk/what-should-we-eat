@@ -120,6 +120,11 @@ export default defineComponent({
         (group: IGroup) => group.id === this.clickedGroupId
       ).users;
     },
+    clickedGroup() {
+      return this.groups.find(
+        (group: IGroup) => group.id === this.clickedGroupId
+      );
+    },
   },
   methods: {
     setIsModalOpen(event: Event, isOpen: boolean, groupId: string) {
@@ -127,11 +132,20 @@ export default defineComponent({
       this.$data.clickedGroupId = groupId;
     },
     participateInGroup() {
+      this.$data.isModalOpen = false;
+
+      if (
+        this.clickedGroup.createdAt.toMillis() + 60000 * 20 <
+        Timestamp.now().toMillis()
+      ) {
+        alert("마감됐습니다.");
+        return;
+      }
+
       this.$store.dispatch(
         "GroupStore/participateInGroupAsync",
         this.$data.clickedGroupId
       );
-      this.$data.isModalOpen = false;
     },
 
     closeModal() {
