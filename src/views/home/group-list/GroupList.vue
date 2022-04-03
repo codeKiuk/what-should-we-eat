@@ -116,7 +116,6 @@ export default defineComponent({
   components: { Modal },
   computed: {
     participatedUsers() {
-      console.log("!!");
       return this.groups.find(
         (group: IGroup) => group.id === this.clickedGroupId
       ).users;

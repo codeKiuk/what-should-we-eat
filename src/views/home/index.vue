@@ -3,14 +3,13 @@
     <button type="text" @click="getMenus">메뉴</button>
     <button type="text" @click="getGroups">점심 파티!</button>
   </header>
-  <GroupList v-if="listType === 'Groups'" :groups="groups" />
+  <GroupList v-if="listType === 'Groups'" :groups="groupsJoin" />
   <MenuList v-else :menus="menus" v-on:setListType="setListType(type)" />
 </template>
 
 <script lang="ts">
 import { IGroup } from "@/app/group/types";
 import { IMenu } from "@/app/menu/types";
-import { Timestamp } from "@firebase/firestore";
 import { defineComponent } from "vue";
 import { useStore } from "vuex";
 import GroupList from "./group-list/GroupList.vue";
@@ -25,32 +24,31 @@ export default defineComponent({
       store.dispatch("GroupStore/getGroupsAsync"),
       store.dispatch("MenuStore/getMenusAsync"),
     ]);
-
-    return {
-      groups: store.getters["GroupStore/getGroupsJoin"],
-      menus: store.getters["MenuStore/getMenus"],
-    };
   },
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Home",
   data() {
     return {
-      groups: this.$store.getters["GroupStore/getGroupsJoin"],
-      menus: this.$store.getters["MenuStore/getMenus"],
       listType: ListType.Menus,
     } as { listType: TListType; groups: IGroup[]; menus: IMenu[] };
   },
   components: { GroupList, MenuList },
+  computed: {
+    groupsJoin() {
+      return this.$store.getters["GroupStore/getGroupsJoin"];
+    },
+    menus() {
+      return this.$store.getters["MenuStore/getMenus"];
+    },
+  },
   methods: {
     getGroups() {
       this.$store.dispatch("GroupStore/getGroupsAsync");
       this.setListType(ListType.Groups);
-      this.$data.groups = this.$store.getters["GroupStore/getGroupsJoin"];
     },
     getMenus() {
       this.$store.dispatch("MenuStore/getMenusAsync");
       this.setListType(ListType.Menus);
-      this.$data.menus = this.$store.getters["MenuStore/getMenus"];
     },
     setListType(type: TListType) {
       this.$data.listType = type;
