@@ -1,7 +1,12 @@
 <template>
   <div class="container">
     <ul class="menu-container">
-      <li class="menu-item" v-for="menu in menus" :key="menu.id">
+      <li
+        class="menu-item"
+        v-for="menu in menus"
+        :key="menu.id"
+        @click="setIsModalOpen($event, true, menu.id)"
+      >
         <img
           class="menu-image"
           :src="require(`@/assets/menus/images/${menu.imgSrc}.png`)"
@@ -12,15 +17,71 @@
         </span>
       </li>
     </ul>
+
+    <Modal v-if="isModalOpen">
+      <template v-slot:header>
+        <span> 새로운 그룹을 생성합니다! 🎉 </span>
+      </template>
+      <template v-slot:body>
+        <span>
+          <span class="menu-name-detail detail">
+            {{ menus.find((menu) => menu.id === cilckedMenuId).name }}
+          </span>
+          메뉴를 선택하셨어요!</span
+        >
+      </template>
+      <template v-slot:footer-yes-button>
+        <button type="text" @click="createGroup">네!</button>
+      </template>
+      <template v-slot:footer-close-button>
+        <button type="text" @click="closeModal">다음에 만들게요</button>
+      </template>
+    </Modal>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import Modal from "@/components/Modal.vue";
+import { Timestamp } from "@firebase/firestore";
+import { ListType } from "../types";
 
 export default defineComponent({
   props: ["menus"],
   name: "MenuList",
+  data() {
+    return {
+      isModalOpen: false,
+      cilckedMenuId: "",
+    };
+  },
+  methods: {
+    setIsModalOpen(event: Event, isOpen: boolean, menuId: string) {
+      this.$data.isModalOpen = isOpen;
+      this.$data.cilckedMenuId = menuId;
+    },
+
+    closeModal() {
+      this.$data.isModalOpen = false;
+    },
+
+    createGroup() {
+      const currentUser = this.$store.getters["UserStore/getCurrentUser"];
+      const currentUserId = currentUser.uid;
+
+      const newGroup = {
+        createdAt: Timestamp.now(),
+        menu: this.$data.cilckedMenuId,
+        users: [currentUserId],
+        lead: currentUserId,
+      };
+      this.$store.dispatch("GroupStore/createGroupAsync", newGroup);
+      this.$data.isModalOpen = false;
+      this.$emit("setListType", ListType.Groups);
+    },
+  },
+  // eslint-disable-next-line vue/no-unused-components
+  components: { Modal },
 });
 </script>
 
@@ -90,5 +151,27 @@ export default defineComponent({
     max-width: 200px;
     margin-top: 1rem;
   }
+}
+
+button {
+  all: unset;
+
+  padding: 10px;
+  margin: 0 10px;
+
+  border: 1px solid whitesmoke;
+  border-radius: 10px;
+  box-shadow: whitesmoke 1px 2px 1px 0px;
+
+  font-weight: bold;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.menu-name-detail {
+  font-weight: bold;
+  @include mainGreenFont;
 }
 </style>

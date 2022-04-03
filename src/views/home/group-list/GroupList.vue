@@ -1,7 +1,12 @@
 <template>
   <div class="container">
     <ul class="group-container">
-      <li class="group-item" v-for="group in groups" :key="group.id">
+      <li
+        class="group-item"
+        v-for="group in groups"
+        :key="group.id"
+        @click="setIsModalOpen($event, true, group.id)"
+      >
         <img
           class="menu-image"
           :src="require(`@/assets/menus/images/${group.menu.imgSrc}.png`)"
@@ -58,12 +63,41 @@
         </span>
       </li>
     </ul>
+
+    <Modal v-if="isModalOpen">
+      <template v-slot:header>
+        <span> 파티에 참여합니다! 🎉 </span>
+      </template>
+      <template v-slot:body>
+        <ul>
+          <li
+            class="group-detail detail"
+            v-for="user in participatedUsers"
+            :key="user.id"
+          >
+            {{ user.name }} 님
+          </li>
+          {{
+            participatedUsers.length
+          }}
+          명과 함께 먹을 수 있어요!
+        </ul>
+      </template>
+      <template v-slot:footer-yes-button>
+        <button type="text" @click="participateInGroup">네!</button>
+      </template>
+      <template v-slot:footer-close-button>
+        <button type="text" @click="closeModal">다음에 참여할게요</button>
+      </template>
+    </Modal>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { Timestamp } from "@firebase/firestore";
 import { defineComponent } from "vue";
+import Modal from "@/components/Modal.vue";
+import { IGroup } from "@/app/group/types";
 
 export default defineComponent({
   setup() {
@@ -71,8 +105,40 @@ export default defineComponent({
       timestamp: Timestamp,
     };
   },
+  data() {
+    return {
+      isModalOpen: false,
+      clickedGroupId: "",
+    };
+  },
   props: ["groups"],
   name: "GroupList",
+  components: { Modal },
+  computed: {
+    participatedUsers() {
+      console.log("!!");
+      return this.groups.find(
+        (group: IGroup) => group.id === this.clickedGroupId
+      ).users;
+    },
+  },
+  methods: {
+    setIsModalOpen(event: Event, isOpen: boolean, groupId: string) {
+      this.$data.isModalOpen = isOpen;
+      this.$data.clickedGroupId = groupId;
+    },
+    participateInGroup() {
+      this.$store.dispatch(
+        "GroupStore/participateInGroupAsync",
+        this.$data.clickedGroupId
+      );
+      this.$data.isModalOpen = false;
+    },
+
+    closeModal() {
+      this.$data.isModalOpen = false;
+    },
+  },
 });
 </script>
 
@@ -131,6 +197,7 @@ export default defineComponent({
   .menu-image {
     border-radius: 10px 10px 0 0;
     width: calc(100% + 20px);
+    max-height: 220px;
 
     &:hover {
       cursor: pointer;
@@ -165,16 +232,32 @@ export default defineComponent({
     }
 
     .timestamp {
-      padding: 1rem 0;
     }
+  }
 
-    .detail {
-      font-weight: bold;
-      @include mainGreenFont;
+  .detail {
+    font-weight: bold;
+    @include mainGreenFont;
+    padding: 10px 0;
 
-      &:hover {
-        cursor: pointer;
-      }
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  button {
+    all: unset;
+
+    padding: 10px;
+    margin: 0 10px;
+
+    border: 1px solid whitesmoke;
+    border-radius: 10px;
+    box-shadow: whitesmoke 1px 2px 1px 0px;
+
+    font-weight: bold;
+
+    &:hover {
+      cursor: pointer;
     }
   }
 }

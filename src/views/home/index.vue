@@ -3,11 +3,13 @@
     <button type="text" @click="getMenus">메뉴</button>
     <button type="text" @click="getGroups">점심 파티!</button>
   </header>
-  <GroupList :groups="groups" v-if="listType === 'Groups'" />
-  <MenuList :menus="menus" v-else />
+  <GroupList v-if="listType === 'Groups'" :groups="groups" />
+  <MenuList v-else :menus="menus" v-on:setListType="setListType(type)" />
 </template>
 
 <script lang="ts">
+import { IGroup } from "@/app/group/types";
+import { IMenu } from "@/app/menu/types";
 import { Timestamp } from "@firebase/firestore";
 import { defineComponent } from "vue";
 import { useStore } from "vuex";
@@ -33,33 +35,26 @@ export default defineComponent({
   name: "Home",
   data() {
     return {
+      groups: this.$store.getters["GroupStore/getGroupsJoin"],
+      menus: this.$store.getters["MenuStore/getMenus"],
       listType: ListType.Menus,
-    } as { listType: TListType };
+    } as { listType: TListType; groups: IGroup[]; menus: IMenu[] };
   },
   components: { GroupList, MenuList },
   methods: {
     getGroups() {
       this.$store.dispatch("GroupStore/getGroupsAsync");
       this.setListType(ListType.Groups);
+      this.$data.groups = this.$store.getters["GroupStore/getGroupsJoin"];
     },
     getMenus() {
       this.$store.dispatch("MenuStore/getMenusAsync");
       this.setListType(ListType.Menus);
+      this.$data.menus = this.$store.getters["MenuStore/getMenus"];
     },
     setListType(type: TListType) {
       this.$data.listType = type;
     },
-  },
-  mounted() {
-    /**
-    const newGroup = {
-      createdAt: Timestamp.now(),
-      menu: "menu-id",
-      users: ["userId", "uid"],
-      lead: "lead-id",
-    };
-    this.$store.dispatch("GroupStore/createGroupAsync", newGroup);
-     */
   },
 });
 </script>
