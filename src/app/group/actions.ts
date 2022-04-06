@@ -26,7 +26,7 @@ export default {
   ) => {
     try {
       const docRefId = await createGroup(newGroup);
-      state.commit("createGroup", { id: docRefId, ...newGroup });
+      state.commit("createGroup", { id: docRefId, newGroup });
     } catch (e) {
       console.log(e);
       return;

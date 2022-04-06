@@ -10,7 +10,7 @@ export default {
     state: IGroupStore,
     { newGroup, id }: { newGroup: IGroupPayload; id: string }
   ) => {
-    state.groups.push({ id, ...newGroup });
+    state.groups = [...state.groups, { id: id, ...newGroup }];
   },
 
   deleteGroup: (state: IGroupStore, id: string) => {

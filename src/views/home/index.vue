@@ -3,27 +3,28 @@
     <button type="text" @click="getMenus">메뉴</button>
     <button type="text" @click="getGroups">점심 파티!</button>
   </header>
-  <GroupList v-if="listType === 'Groups'" :groups="groupsJoin" />
-  <MenuList v-else :menus="menus" v-on:setListType="setListType(type)" />
+  <GroupList v-show="listType === 'Groups'" :groups="groupsJoin" />
+  <MenuList
+    v-show="listType === 'Menus'"
+    :menus="menus"
+    @setListType="setListType($event)"
+  />
 </template>
 
 <script lang="ts">
 import { IGroup } from "@/app/group/types";
 import { IMenu } from "@/app/menu/types";
 import { defineComponent } from "vue";
-import { useStore } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import GroupList from "./group-list/GroupList.vue";
 import MenuList from "./menu-list/MenuList.vue";
 import { ListType, TListType } from "./types";
 
 export default defineComponent({
-  async setup() {
-    const store = useStore();
-    await store.dispatch("UserStore/getUsersAsync");
-    await Promise.all([
-      store.dispatch("GroupStore/getGroupsAsync"),
-      store.dispatch("MenuStore/getMenusAsync"),
-    ]);
+  mounted() {
+    this.getUsersAsync();
+    this.getGroupsAsync();
+    this.getMenusAsync();
   },
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Home",
@@ -34,20 +35,26 @@ export default defineComponent({
   },
   components: { GroupList, MenuList },
   computed: {
-    groupsJoin() {
-      return this.$store.getters["GroupStore/getGroupsJoin"];
-    },
-    menus() {
-      return this.$store.getters["MenuStore/getMenus"];
-    },
+    ...mapGetters({
+      groupsJoin: "GroupStore/getGroupsJoin",
+      menus: "MenuStore/getMenus",
+      currentuser: "UserStore/getCurrentUser",
+    }),
   },
   methods: {
+    ...mapActions({
+      getUsersAsync: "UserStore/getUsersAsync",
+      getGroupsAsync: "GroupStore/getGroupsAsync",
+      getMenusAsync: "MenuStore/getMenusAsync",
+      createGroupAsync: "GroupStore/createGroupAsync",
+      participateInGroupAsync: "GroupStore/participateInGroupAsync",
+    }),
     getGroups() {
-      this.$store.dispatch("GroupStore/getGroupsAsync");
+      this.getGroupsAsync();
       this.setListType(ListType.Groups);
     },
     getMenus() {
-      this.$store.dispatch("MenuStore/getMenusAsync");
+      this.getMenusAsync();
       this.setListType(ListType.Menus);
     },
     setListType(type: TListType) {

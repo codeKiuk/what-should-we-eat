@@ -25,7 +25,7 @@
       <template v-slot:body>
         <span>
           <span class="menu-name-detail detail">
-            {{ menus.find((menu) => menu.id === cilckedMenuId).name }}
+            {{ clickedMenu.name }}
           </span>
           메뉴를 선택하셨어요!</span
         >
@@ -45,6 +45,7 @@ import { defineComponent } from "vue";
 import Modal from "@/components/Modal.vue";
 import { Timestamp } from "@firebase/firestore";
 import { ListType } from "../types";
+import { IMenu } from "@/app/menu/types";
 
 export default defineComponent({
   props: ["menus"],
@@ -55,10 +56,15 @@ export default defineComponent({
       cilckedMenuId: "",
     };
   },
+  computed: {
+    clickedMenu() {
+      return this.menus.find((menu: IMenu) => menu.id === this.cilckedMenuId);
+    },
+  },
   methods: {
     setIsModalOpen(event: Event, isOpen: boolean, menuId: string) {
-      this.$data.isModalOpen = isOpen;
       this.$data.cilckedMenuId = menuId;
+      this.$data.isModalOpen = isOpen;
     },
 
     closeModal() {
