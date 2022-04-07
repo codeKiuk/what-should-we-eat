@@ -5,6 +5,8 @@ export default {
   getGroups: (state: IGroupStore) => state.groups,
 
   getGroupsJoin: (state: IGroupStore, getters: any, rootState: IRootStore) => {
+    if (!rootState.UserStore.users || !rootState.MenuStore.menus) return;
+
     const users = rootState.UserStore.users;
     const menus = rootState.MenuStore.menus;
 
