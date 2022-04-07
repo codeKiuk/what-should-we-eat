@@ -38,7 +38,7 @@
           <span
             class="timestamp"
             v-if="
-              group.createdAt.toMillis() + TWENTY_MIN_BY_MS >
+              group.createdAt.toMillis() + 60000 * 20 >
               timestamp.now().toMillis()
             "
           >
@@ -98,15 +98,17 @@ import { Timestamp } from "@firebase/firestore";
 import { defineComponent } from "vue";
 import Modal from "@/components/Modal.vue";
 import { IGroup } from "@/app/group/types";
-import { TWENTY_MIN_BY_MS } from "@/assets/constants/constants";
 
 export default defineComponent({
+  setup() {
+    return {
+      timestamp: Timestamp,
+    };
+  },
   data() {
     return {
       isModalOpen: false,
       clickedGroupId: "",
-      TWENTY_MIN_BY_MS: TWENTY_MIN_BY_MS,
-      timestamp: Timestamp,
     };
   },
   props: ["groups"],
@@ -126,11 +128,11 @@ export default defineComponent({
   },
   methods: {
     setIsModalOpen(event: Event, isOpen: boolean, groupId: string) {
-      this.isModalOpen = isOpen;
-      this.clickedGroupId = groupId;
+      this.$data.isModalOpen = isOpen;
+      this.$data.clickedGroupId = groupId;
     },
     participateInGroup() {
-      this.closeModal();
+      this.$data.isModalOpen = false;
 
       if (
         this.clickedGroup.createdAt.toMillis() + 60000 * 20 <
@@ -142,12 +144,12 @@ export default defineComponent({
 
       this.$store.dispatch(
         "GroupStore/participateInGroupAsync",
-        this.clickedGroupId
+        this.$data.clickedGroupId
       );
     },
 
     closeModal() {
-      this.isModalOpen = false;
+      this.$data.isModalOpen = false;
     },
   },
 });
@@ -200,7 +202,6 @@ export default defineComponent({
     margin: 1rem;
 
     transition: 200ms ease-in-out;
-
     &:hover {
       transform: translateY(-10px);
     }
@@ -256,7 +257,6 @@ export default defineComponent({
       cursor: pointer;
     }
   }
-
   button {
     all: unset;
 

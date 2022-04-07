@@ -1,33 +1,31 @@
 import { Timestamp } from "firebase/firestore";
 import { IGroup, IGroupPayload, IGroupStore } from "./types";
-import { TWENTY_MIN_BY_MS } from "@/assets/constants/constants";
 
 export default {
-  setGroups: (store: IGroupStore, groups: IGroup[]) => {
-    store.groups = groups;
+  setGroups: (state: IGroupStore, groups: IGroup[]) => {
+    state.groups = groups;
   },
 
   createGroup: (
-    store: IGroupStore,
+    state: IGroupStore,
     { newGroup, id }: { newGroup: IGroupPayload; id: string }
   ) => {
-    store.groups = [...store.groups, { id: id, ...newGroup }];
+    state.groups = [...state.groups, { id: id, ...newGroup }];
   },
 
-  deleteGroup: (store: IGroupStore, id: string) => {
-    store.groups.filter((group) => group.id !== id);
+  deleteGroup: (state: IGroupStore, id: string) => {
+    state.groups.filter((group) => group.id !== id);
   },
 
   participateInGroup: (
-    store: IGroupStore,
+    state: IGroupStore,
     { currentUserId, groupId }: { currentUserId: string; groupId: string }
   ) => {
-    store.groups = store.groups.map((group) => {
+    state.groups = state.groups.map((group) => {
       if (
         group.id === groupId &&
         !group.users.includes(currentUserId) &&
-        group.createdAt.toMillis() + TWENTY_MIN_BY_MS >
-          Timestamp.now().toMillis()
+        group.createdAt.toMillis() + 60000 * 20 > Timestamp.now().toMillis()
       ) {
         return {
           ...group,
@@ -39,10 +37,10 @@ export default {
   },
 
   comeOutFromGroup: (
-    store: IGroupStore,
+    state: IGroupStore,
     { currentUserId, groupId }: { currentUserId: string; groupId: string }
   ) => {
-    store.groups = store.groups.map((group) => {
+    state.groups = state.groups.map((group) => {
       if (group.id === groupId) {
         return {
           ...group,

@@ -63,12 +63,12 @@ export default defineComponent({
   },
   methods: {
     setIsModalOpen(event: Event, isOpen: boolean, menuId: string) {
-      this.cilckedMenuId = menuId;
-      this.isModalOpen = isOpen;
+      this.$data.cilckedMenuId = menuId;
+      this.$data.isModalOpen = isOpen;
     },
 
     closeModal() {
-      this.isModalOpen = false;
+      this.$data.isModalOpen = false;
     },
 
     createGroup() {
@@ -77,12 +77,12 @@ export default defineComponent({
 
       const newGroup = {
         createdAt: Timestamp.now(),
-        menu: this.cilckedMenuId,
+        menu: this.$data.cilckedMenuId,
         users: [currentUserId],
         lead: currentUserId,
       };
       this.$store.dispatch("GroupStore/createGroupAsync", newGroup);
-      this.closeModal();
+      this.$data.isModalOpen = false;
       this.$emit("setListType", ListType.Groups);
     },
   },
