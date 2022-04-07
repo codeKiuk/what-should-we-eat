@@ -1,5 +1,6 @@
 import { Timestamp } from "firebase/firestore";
 import { IGroup, IGroupPayload, IGroupStore } from "./types";
+import { TWENTY_MIN_BY_MS } from "@/assets/constants/constants";
 
 export default {
   setGroups: (state: IGroupStore, groups: IGroup[]) => {
@@ -25,7 +26,8 @@ export default {
       if (
         group.id === groupId &&
         !group.users.includes(currentUserId) &&
-        group.createdAt.toMillis() + 60000 * 20 > Timestamp.now().toMillis()
+        group.createdAt.toMillis() + TWENTY_MIN_BY_MS >
+          Timestamp.now().toMillis()
       ) {
         return {
           ...group,

@@ -38,7 +38,7 @@
           <span
             class="timestamp"
             v-if="
-              group.createdAt.toMillis() + 60000 * 20 >
+              group.createdAt.toMillis() + TWENTY_MIN_BY_MS >
               timestamp.now().toMillis()
             "
           >
@@ -98,17 +98,15 @@ import { Timestamp } from "@firebase/firestore";
 import { defineComponent } from "vue";
 import Modal from "@/components/Modal.vue";
 import { IGroup } from "@/app/group/types";
+import { TWENTY_MIN_BY_MS } from "@/assets/constants/constants";
 
 export default defineComponent({
-  setup() {
-    return {
-      timestamp: Timestamp,
-    };
-  },
   data() {
     return {
       isModalOpen: false,
       clickedGroupId: "",
+      timestamp: Timestamp,
+      TWENTY_MIN_BY_MS: TWENTY_MIN_BY_MS,
     };
   },
   props: ["groups"],
@@ -135,7 +133,7 @@ export default defineComponent({
       this.$data.isModalOpen = false;
 
       if (
-        this.clickedGroup.createdAt.toMillis() + 60000 * 20 <
+        this.clickedGroup.createdAt.toMillis() + TWENTY_MIN_BY_MS <
         Timestamp.now().toMillis()
       ) {
         alert("마감됐습니다.");

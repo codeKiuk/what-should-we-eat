@@ -6,6 +6,6 @@ export default {
   getMenusAsync: async (state: ActionContext<IMenuStore, any>) => {
     const menus = await getMenus();
     state.commit("setMenus", menus);
-    return null;
+    return;
   },
 };
