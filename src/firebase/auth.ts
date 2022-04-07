@@ -3,7 +3,7 @@ import {
   signInWithPopup,
   UserCredential,
 } from "@firebase/auth";
-import { addDoc, collection, getDocs, query } from "@firebase/firestore";
+import { collection, getDocs, query, setDoc, doc } from "@firebase/firestore";
 import { db, firebaseAuth } from "@/main";
 import { IUser } from "@/app/user/types";
 
@@ -27,18 +27,20 @@ export const googleLogin = async () => {
 
     const token = credential.accessToken;
     return { currentUser, token };
-  } catch (error: any) {
-    console.log("Login Error: ", error);
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    const email = error.email;
-    const credential = GoogleAuthProvider.credentialFromError(error);
-    return { error, credential };
+  } catch (e: any) {
+    console.log("Login Error: ", e);
+    const errorCode = e.code;
+    const errorMessage = e.message;
+    const email = e.email;
+    const credential = GoogleAuthProvider.credentialFromError(e);
+    return { e, credential };
   }
 };
 
 const addUser = async (currentUser: IUser) => {
-  const docRef = await addDoc(collection(db, "User"), currentUser);
+  // const docRef = await addDoc(collection(db, "User"), currentUser);
+  const docRef = await doc(db, "User", currentUser.uid);
+  await setDoc(docRef, currentUser);
 };
 
 export const getUsers = async () => {
