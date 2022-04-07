@@ -1,7 +1,7 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 import Home from "../views/home/index.vue";
 import Login from "../views/login/index.vue";
-import { firebaseAuth } from "@/main";
+import { isAuthenticated } from "@/firebase/auth";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -19,15 +19,6 @@ const routes: Array<RouteRecordRaw> = [
     name: "Login",
     component: Login,
   },
-  // {
-  //   path: "/about",
-  //   name: "about",
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  //   component: () =>
-  //     import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
-  // },
 ];
 
 const router = createRouter({
@@ -36,18 +27,15 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (
-    to.name !== "Login" &&
-    (!firebaseAuth.currentUser || firebaseAuth.currentUser.uid === "")
-  ) {
-    next({ name: "Login" });
-  } else if (
-    to.name === "Login" &&
-    firebaseAuth.currentUser &&
-    firebaseAuth.currentUser.uid !== ""
-  ) {
-    next({ name: "Home" });
-  } else next();
+  isAuthenticated().then((user) => {
+    if (to.name !== "Login" && !user) {
+      next({ name: "Login", replace: true });
+    } else if (to.name === "Login" && user) {
+      next({ name: "Home", replace: true });
+    } else {
+      next();
+    }
+  });
 });
 
 export default router;

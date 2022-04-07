@@ -7,22 +7,24 @@
 <script>
 import { defineComponent } from "vue";
 import googleLogin from "../../firebase/auth";
+import { mapActions } from "vuex";
 
 export default defineComponent({
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Login",
   methods: {
+    ...mapActions({
+      setCurrentUserAsync: "UserStore/setCurrentUser",
+    }),
     async login() {
       const res = await googleLogin();
 
       if (res.error) {
-        this.$store.commit("UserStore/setLoggedIn", false);
         return;
       }
 
       this.$router.replace("home");
-      this.$store.commit("UserStore/setLoggedIn", true);
-      this.$store.commit("UserStore/setCurrentUser", res.currentUser);
+      this.setCurrentUserAsync(res.currentUser);
     },
   },
 });

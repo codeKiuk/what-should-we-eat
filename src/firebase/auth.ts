@@ -3,11 +3,24 @@ import {
   signInWithPopup,
   UserCredential,
 } from "@firebase/auth";
-import { collection, getDocs, query, setDoc, doc } from "@firebase/firestore";
+import { collection, doc, getDocs, query, setDoc } from "@firebase/firestore";
 import { db, firebaseAuth } from "@/main";
 import { IUser } from "@/app/user/types";
+import { onAuthStateChanged } from "firebase/auth";
 
 const googleAuth = new GoogleAuthProvider();
+
+export const isAuthenticated = () => {
+  return new Promise((resolve, reject) => {
+    onAuthStateChanged(firebaseAuth, (user) => {
+      if (user) {
+        return resolve(user);
+      } else {
+        return reject();
+      }
+    });
+  });
+};
 
 export const googleLogin = async () => {
   try {
@@ -38,7 +51,6 @@ export const googleLogin = async () => {
 };
 
 const addUser = async (currentUser: IUser) => {
-  // const docRef = await addDoc(collection(db, "User"), currentUser);
   const docRef = await doc(db, "User", currentUser.uid);
   await setDoc(docRef, currentUser);
 };

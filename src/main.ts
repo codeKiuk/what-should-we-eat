@@ -9,6 +9,6 @@ import firebaseConfig from "../firebaseConfig";
 
 export const app: FirebaseApp = initializeApp(firebaseConfig);
 export const db: Firestore = getFirestore(app);
-export const firebaseAuth: Auth = getAuth(app);
+export const firebaseAuth: Auth = getAuth();
 
 createApp(App).use(router).use(store).mount("#app");

@@ -15,13 +15,22 @@
 import { IGroup } from "@/app/group/types";
 import { IMenu } from "@/app/menu/types";
 import { defineComponent } from "vue";
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 import GroupList from "./group-list/GroupList.vue";
 import MenuList from "./menu-list/MenuList.vue";
 import { ListType, TListType } from "./types";
+import { firebaseAuth } from "@/main";
 
 export default defineComponent({
   mounted() {
+    if (firebaseAuth.currentUser && !this.currentUser.uid) {
+      this.setCurrentUser({
+        name: firebaseAuth.currentUser.displayName,
+        uid: firebaseAuth.currentUser.uid,
+        email: firebaseAuth.currentUser.email,
+      });
+    }
+
     this.getUsersAsync();
     this.getGroupsAsync();
     this.getMenusAsync();
@@ -38,7 +47,7 @@ export default defineComponent({
     ...mapGetters({
       groupsJoin: "GroupStore/getGroupsJoin",
       menus: "MenuStore/getMenus",
-      currentuser: "UserStore/getCurrentUser",
+      currentUser: "UserStore/getCurrentUser",
     }),
   },
   methods: {
@@ -48,6 +57,9 @@ export default defineComponent({
       getMenusAsync: "MenuStore/getMenusAsync",
       createGroupAsync: "GroupStore/createGroupAsync",
       participateInGroupAsync: "GroupStore/participateInGroupAsync",
+    }),
+    ...mapMutations({
+      setCurrentUser: "UserStore/setCurrentUser",
     }),
     getGroups() {
       this.getGroupsAsync();
