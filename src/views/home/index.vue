@@ -38,7 +38,7 @@ export default defineComponent({
     ...mapGetters({
       groupsJoin: "GroupStore/getGroupsJoin",
       menus: "MenuStore/getMenus",
-      currentuser: "UserStore/getCurrentUser",
+      currentUser: "UserStore/getCurrentUser",
     }),
   },
   methods: {
