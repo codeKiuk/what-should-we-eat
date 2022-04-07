@@ -7,7 +7,6 @@ const UserStore = {
   namespaced: true,
   state: () =>
     ({
-      isLoggedIn: false,
       currentUser: { name: "", email: "", uid: "" },
       users: [],
     } as IUserStore),

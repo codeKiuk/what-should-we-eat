@@ -6,6 +6,5 @@ export interface IUser {
 
 export interface IUserStore {
   users: IUser[];
-  isLoggedIn: boolean;
   currentUser: IUser;
 }
