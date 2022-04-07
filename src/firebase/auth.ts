@@ -16,7 +16,7 @@ export const isAuthenticated = () => {
       if (user) {
         return resolve(user);
       } else {
-        return reject();
+        return reject(user);
       }
     });
   });

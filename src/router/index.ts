@@ -27,15 +27,23 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  isAuthenticated().then((user) => {
-    if (to.name !== "Login" && !user) {
-      next({ name: "Login", replace: true });
-    } else if (to.name === "Login" && user) {
-      next({ name: "Home", replace: true });
-    } else {
-      next();
-    }
-  });
+  isAuthenticated()
+    .then((user) => {
+      // user !== null
+      if (to.name === "Login") {
+        next({ name: "Home", replace: true });
+      } else {
+        next();
+      }
+    })
+    .catch((error) => {
+      // user === null
+      if (to.name === "Login") {
+        next();
+      } else {
+        next({ name: "Login", replace: true });
+      }
+    });
 });
 
 export default router;
