@@ -70,7 +70,7 @@ export default defineComponent({
       this.setListType(ListType.Menus);
     },
     setListType(type: TListType) {
-      this.$data.listType = type;
+      this.listType = type;
     },
   },
 });

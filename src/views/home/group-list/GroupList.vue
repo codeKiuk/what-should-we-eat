@@ -126,11 +126,11 @@ export default defineComponent({
   },
   methods: {
     setIsModalOpen(event: Event, isOpen: boolean, groupId: string) {
-      this.$data.isModalOpen = isOpen;
-      this.$data.clickedGroupId = groupId;
+      this.isModalOpen = isOpen;
+      this.clickedGroupId = groupId;
     },
     participateInGroup() {
-      this.$data.isModalOpen = false;
+      this.isModalOpen = false;
 
       if (
         this.clickedGroup.createdAt.toMillis() + TWENTY_MIN_BY_MS <
@@ -142,12 +142,12 @@ export default defineComponent({
 
       this.$store.dispatch(
         "GroupStore/participateInGroupAsync",
-        this.$data.clickedGroupId
+        this.clickedGroupId
       );
     },
 
     closeModal() {
-      this.$data.isModalOpen = false;
+      this.isModalOpen = false;
     },
   },
 });
