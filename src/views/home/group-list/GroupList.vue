@@ -155,11 +155,11 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 @import "@/styles/color.scss";
+@import "@/styles/layout.scss";
+@import "@/styles/button.scss";
 
 .container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  @include column-center;
 
   width: 100vw;
   margin: auto;
@@ -184,10 +184,8 @@ export default defineComponent({
   }
 
   .group-item {
-    display: flex;
-    flex-direction: column;
+    @include column-center;
     justify-content: center;
-    align-items: center;
 
     border: 1px solid whitesmoke;
     border-radius: 10px;
@@ -216,10 +214,7 @@ export default defineComponent({
   }
 
   .member-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-
+    @include row-center;
     padding: 1rem 0;
 
     .member-item {
@@ -247,8 +242,8 @@ export default defineComponent({
   }
 
   .detail {
-    font-weight: bold;
     @include mainGreenFont;
+    font-weight: bold;
     padding: 10px 0;
 
     &:hover {
@@ -256,20 +251,7 @@ export default defineComponent({
     }
   }
   button {
-    all: unset;
-
-    padding: 10px;
-    margin: 0 10px;
-
-    border: 1px solid whitesmoke;
-    border-radius: 10px;
-    box-shadow: whitesmoke 1px 2px 1px 0px;
-
-    font-weight: bold;
-
-    &:hover {
-      cursor: pointer;
-    }
+    @include button;
   }
 }
 </style>

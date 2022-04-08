@@ -1,0 +1,17 @@
+@mixin button {
+  all: unset;
+
+  padding: 10px;
+  margin: 0 10px;
+
+  border: 1px solid whitesmoke;
+  border-radius: 10px;
+  box-shadow: whitesmoke 1px 2px 1px 0px;
+
+  font-weight: bold;
+  text-align: center;
+
+  &:hover {
+    cursor: pointer;
+  }
+}

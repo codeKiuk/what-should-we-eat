@@ -1,7 +1,9 @@
+$mainGreen: #42b983;
+
 @mixin mainGreenBorder {
-  border-color: #42b983;
+  border-color: $mainGreen;
 }
 
 @mixin mainGreenFont {
-  color: #42b983;
+  color: $mainGreen;
 }

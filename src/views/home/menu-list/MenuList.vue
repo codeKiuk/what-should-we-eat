@@ -5,6 +5,7 @@
         class="menu-item"
         v-for="menu in menus"
         :key="menu.id"
+        :id="menu.id"
         @click="setIsModalOpen($event, true, menu.id)"
       >
         <img
@@ -53,17 +54,17 @@ export default defineComponent({
   data() {
     return {
       isModalOpen: false,
-      cilckedMenuId: "",
+      clickedMenuId: "",
     };
   },
   computed: {
     clickedMenu() {
-      return this.menus.find((menu: IMenu) => menu.id === this.cilckedMenuId);
+      return this.menus.find((menu: IMenu) => menu.id === this.clickedMenuId);
     },
   },
   methods: {
     setIsModalOpen(event: Event, isOpen: boolean, menuId: string) {
-      this.cilckedMenuId = menuId;
+      this.clickedMenuId = menuId;
       this.isModalOpen = isOpen;
     },
 
@@ -77,7 +78,7 @@ export default defineComponent({
 
       const newGroup = {
         createdAt: Timestamp.now(),
-        menu: this.cilckedMenuId,
+        menu: this.clickedMenuId,
         users: [currentUserId],
         lead: currentUserId,
       };
@@ -93,11 +94,11 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 @import "@/styles/color.scss";
+@import "@/styles/layout.scss";
+@import "@/styles/button.scss";
 
 .container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  @include column-center;
 
   width: 100vw;
   margin: auto;
@@ -138,6 +139,7 @@ export default defineComponent({
     margin: 1rem;
 
     transition: 200ms ease-in-out;
+
     &:hover {
       transform: translateY(-10px);
     }
@@ -160,24 +162,11 @@ export default defineComponent({
 }
 
 button {
-  all: unset;
-
-  padding: 10px;
-  margin: 0 10px;
-
-  border: 1px solid whitesmoke;
-  border-radius: 10px;
-  box-shadow: whitesmoke 1px 2px 1px 0px;
-
-  font-weight: bold;
-
-  &:hover {
-    cursor: pointer;
-  }
+  @include button;
 }
 
 .menu-name-detail {
-  font-weight: bold;
   @include mainGreenFont;
+  font-weight: bold;
 }
 </style>
