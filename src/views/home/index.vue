@@ -7,69 +7,62 @@
   <MenuList v-else :menus="menus" @setListType="setListType($event)" />
 </template>
 
-<script lang="ts">
-import { IGroup } from "@/app/group/types";
-import { IMenu } from "@/app/menu/types";
-import { defineComponent } from "vue";
-import { mapActions, mapGetters, mapMutations } from "vuex";
+<script setup lang="ts">
+import { computed, onMounted, reactive } from "vue";
+import { useStore } from "vuex";
 import GroupList from "./group-list/GroupList.vue";
 import MenuList from "./menu-list/MenuList.vue";
 import { ListType, TListType } from "./types";
 import { firebaseAuth } from "@/main";
+import { IUser } from "@/app/user/types";
 
-export default defineComponent({
-  mounted() {
-    if (firebaseAuth.currentUser && !this.currentUser.uid) {
-      this.setCurrentUser({
-        name: firebaseAuth.currentUser.displayName,
-        uid: firebaseAuth.currentUser.uid,
-        email: firebaseAuth.currentUser.email,
-      });
-    }
+const store = useStore();
 
-    this.getUsersAsync();
-    this.getGroupsAsync();
-    this.getMenusAsync();
-  },
-  // eslint-disable-next-line vue/multi-word-component-names
-  name: "Home",
-  data() {
-    return {
-      listType: ListType.Menus,
-    } as { listType: TListType; groups: IGroup[]; menus: IMenu[] };
-  },
-  components: { GroupList, MenuList },
-  computed: {
-    ...mapGetters({
-      groupsJoin: "GroupStore/getGroupsJoin",
-      menus: "MenuStore/getMenus",
-      currentUser: "UserStore/getCurrentUser",
-    }),
-  },
-  methods: {
-    ...mapActions({
-      getUsersAsync: "UserStore/getUsersAsync",
-      getGroupsAsync: "GroupStore/getGroupsAsync",
-      getMenusAsync: "MenuStore/getMenusAsync",
-      createGroupAsync: "GroupStore/createGroupAsync",
-      participateInGroupAsync: "GroupStore/participateInGroupAsync",
-    }),
-    ...mapMutations({
-      setCurrentUser: "UserStore/setCurrentUser",
-    }),
-    getGroups() {
-      this.getGroupsAsync();
-      this.setListType(ListType.Groups);
-    },
-    getMenus() {
-      this.getMenusAsync();
-      this.setListType(ListType.Menus);
-    },
-    setListType(type: TListType) {
-      this.listType = type;
-    },
-  },
+const state = reactive<{ listType: TListType }>({
+  listType: ListType.Menus,
 });
+
+onMounted(() => {
+  if (firebaseAuth.currentUser && !currentUser.value.uid) {
+    setCurrentUser({
+      name: firebaseAuth.currentUser.displayName as string,
+      uid: firebaseAuth.currentUser.uid,
+      email: firebaseAuth.currentUser.email as string,
+    });
+  }
+
+  getUsersAsync();
+  getGroupsAsync();
+  getMenusAsync();
+});
+
+const groupsJoin = computed(() => store.getters["GroupStore/getGroupsJoin"]);
+const menus = computed(() => store.getters["MenuStore/getMenus"]);
+const currentUser = computed(() => store.getters["UserStore/getCurrentUser"]);
+
+const setCurrentUser = (currentUser: IUser) =>
+  store.commit("UserStore/setCurrentUser", currentUser);
+
+const getUsersAsync = () => store.dispatch("UserStore/getUsersAsync");
+const getGroupsAsync = () => store.dispatch("GroupStore/getGroupsAsync");
+const getMenusAsync = () => store.dispatch("MenuStore/getMenusAsync");
+const createGroupAsync = () => store.dispatch("GroupStore/createGroupAsync");
+const participateInGroupAsync = () =>
+  store.dispatch("GroupStore/participateInGroupAsync");
+
+function getGroups() {
+  getGroupsAsync();
+  setListType(ListType.Groups);
+}
+
+function getMenus() {
+  getMenusAsync();
+  setListType(ListType.Menus);
+}
+
+function setListType(type: TListType) {
+  state.listType = type;
+}
 </script>
 
 <style lang="scss" scoped>
