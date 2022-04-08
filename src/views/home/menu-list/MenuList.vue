@@ -43,55 +43,55 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
 import Modal from "@/components/Modal.vue";
-import { Timestamp } from "@firebase/firestore";
-import { ListType } from "../types";
-import { IMenu } from "@/app/menu/types";
 import AddMenuBtn from "@/views/home/menu-list/components/AddMenuBtn.vue";
+import { Timestamp } from "@firebase/firestore";
+import { ListType, TListType } from "../types";
+import { IMenu } from "@/app/menu/types";
+import { useStore } from "vuex";
+import useModal from "@/hooks/useModal";
+import { computed, defineEmits, defineProps, reactive, toRefs } from "vue";
 
-export default defineComponent({
-  props: ["menus"],
-  name: "MenuList",
-  data() {
-    return {
-      isModalOpen: false,
-      clickedMenuId: "",
-    };
-  },
-  computed: {
-    clickedMenu() {
-      return this.menus.find((menu: IMenu) => menu.id === this.clickedMenuId);
-    },
-  },
-  methods: {
-    setIsModalOpen(event: Event, isOpen: boolean, menuId: string) {
-      this.clickedMenuId = menuId;
-      this.isModalOpen = isOpen;
-    },
+const store = useStore();
+const { isModalOpen, closeModal } = useModal();
 
-    closeModal() {
-      this.isModalOpen = false;
-    },
+const props = defineProps<{
+  menus: IMenu[];
+}>();
 
-    createGroup() {
-      const currentUser = this.$store.getters["UserStore/getCurrentUser"];
-      const currentUserId = currentUser.uid;
+const emits = defineEmits<{
+  (e: "setListType", event: TListType): void;
+}>();
 
-      const newGroup = {
-        createdAt: Timestamp.now(),
-        menu: this.clickedMenuId,
-        users: [currentUserId],
-        lead: currentUserId,
-      };
-      this.$store.dispatch("GroupStore/createGroupAsync", newGroup);
-      this.isModalOpen = false;
-      this.$emit("setListType", ListType.Groups);
-    },
-  },
-  // eslint-disable-next-line vue/no-unused-components
-  components: { Modal, AddMenuBtn },
+const { menus } = toRefs(props);
+
+const state = reactive({
+  clickedMenuId: "",
+});
+
+function setIsModalOpen(event: Event, isOpen: boolean, menuId: string) {
+  state.clickedMenuId = menuId;
+  isModalOpen.value = isOpen;
+}
+
+function createGroup() {
+  const currentUser = store.getters["UserStore/getCurrentUser"];
+  const currentUserId = currentUser.uid;
+
+  const newGroup = {
+    createdAt: Timestamp.now(),
+    menu: state.clickedMenuId,
+    users: [currentUserId],
+    lead: currentUserId,
+  };
+  store.dispatch("GroupStore/createGroupAsync", newGroup);
+  isModalOpen.value = false;
+  emits("setListType", ListType.Groups);
+}
+
+const clickedMenu = computed(() => {
+  return menus.value.find((menu: IMenu) => menu.id === state.clickedMenuId);
 });
 </script>
 
