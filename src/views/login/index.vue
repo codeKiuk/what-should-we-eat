@@ -4,30 +4,24 @@
   </main>
 </template>
 
-<script>
-import { defineComponent } from "vue";
+<script setup lang="ts">
 import googleLogin from "../../firebase/auth";
-import { mapActions } from "vuex";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 
-export default defineComponent({
-  // eslint-disable-next-line vue/multi-word-component-names
-  name: "Login",
-  methods: {
-    ...mapActions({
-      setCurrentUserAsync: "UserStore/setCurrentUser",
-    }),
-    async login() {
-      const res = await googleLogin();
+const store = useStore();
+const router = useRouter();
 
-      if (res.error) {
-        return;
-      }
+async function login() {
+  const res = await googleLogin();
 
-      this.$router.replace("home");
-      this.setCurrentUserAsync(res.currentUser);
-    },
-  },
-});
+  if (res.error) {
+    return;
+  }
+
+  store.dispatch("UserStore/setCurrentUser", res.currentUser);
+  router.replace("home");
+}
 </script>
 
 <style lang="scss" scoped>
