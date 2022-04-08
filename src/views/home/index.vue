@@ -3,12 +3,8 @@
     <button type="text" @click="getMenus">메뉴</button>
     <button type="text" @click="getGroups">점심 파티!</button>
   </header>
-  <GroupList v-show="listType === 'Groups'" :groups="groupsJoin" />
-  <MenuList
-    v-show="listType === 'Menus'"
-    :menus="menus"
-    @setListType="setListType($event)"
-  />
+  <GroupList v-if="listType === 'Groups'" :groups="groupsJoin" />
+  <MenuList v-else :menus="menus" @setListType="setListType($event)" />
 </template>
 
 <script lang="ts">

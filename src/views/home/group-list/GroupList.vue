@@ -93,63 +93,60 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { Timestamp } from "@firebase/firestore";
-import { defineComponent } from "vue";
+import { computed, defineProps, reactive, toRefs } from "vue";
+import { useStore } from "vuex";
 import Modal from "@/components/Modal.vue";
 import { IGroup } from "@/app/group/types";
 import { TWENTY_MIN_BY_MS } from "@/assets/constants/constants";
+import useModal from "@/hooks/useModal";
 
-export default defineComponent({
-  data() {
-    return {
-      isModalOpen: false,
-      clickedGroupId: "",
-      timestamp: Timestamp,
-      TWENTY_MIN_BY_MS: TWENTY_MIN_BY_MS,
-    };
-  },
-  props: ["groups"],
-  name: "GroupList",
-  components: { Modal },
-  computed: {
-    participatedUsers() {
-      return this.groups.find(
-        (group: IGroup) => group.id === this.clickedGroupId
-      ).users;
-    },
-    clickedGroup() {
-      return this.groups.find(
-        (group: IGroup) => group.id === this.clickedGroupId
-      );
-    },
-  },
-  methods: {
-    setIsModalOpen(event: Event, isOpen: boolean, groupId: string) {
-      this.isModalOpen = isOpen;
-      this.clickedGroupId = groupId;
-    },
-    participateInGroup() {
-      this.isModalOpen = false;
+const store = useStore();
+const { isModalOpen, closeModal } = useModal();
 
-      if (
-        this.clickedGroup.createdAt.toMillis() + TWENTY_MIN_BY_MS <
-        Timestamp.now().toMillis()
-      ) {
-        alert("마감됐습니다.");
-        return;
-      }
+const props = defineProps<{
+  groups: IGroup[];
+}>();
 
-      this.$store.dispatch(
-        "GroupStore/participateInGroupAsync",
-        this.clickedGroupId
-      );
-    },
+const { groups } = toRefs(props);
 
-    closeModal() {
-      this.isModalOpen = false;
-    },
-  },
+const state = reactive({
+  clickedGroupId: "",
+  TWENTY_MIN_BY_MS: TWENTY_MIN_BY_MS,
+});
+
+const timestamp = Timestamp;
+
+function participateInGroup() {
+  isModalOpen.value = false;
+
+  if (
+    clickedGroup.value &&
+    clickedGroup.value.createdAt.toMillis() + TWENTY_MIN_BY_MS <
+      timestamp.now().toMillis()
+  ) {
+    alert("마감됐습니다.");
+    return;
+  }
+
+  store.dispatch("GroupStore/participateInGroupAsync", state.clickedGroupId);
+}
+
+function setIsModalOpen(event: Event, isOpen: boolean, groupId: string) {
+  isModalOpen.value = isOpen;
+  state.clickedGroupId = groupId;
+}
+
+const participatedUsers = computed(() => {
+  return groups.value.find((group: IGroup) => group.id === state.clickedGroupId)
+    ?.users;
+});
+
+const clickedGroup = computed(() => {
+  return groups.value.find(
+    (group: IGroup) => group.id === state.clickedGroupId
+  );
 });
 </script>
 
@@ -198,6 +195,7 @@ export default defineComponent({
     margin: 1rem;
 
     transition: 200ms ease-in-out;
+
     &:hover {
       transform: translateY(-10px);
     }
@@ -250,6 +248,7 @@ export default defineComponent({
       cursor: pointer;
     }
   }
+
   button {
     @include button;
   }
