@@ -19,6 +19,8 @@
       </li>
     </ul>
 
+    <AddMenuBtn />
+
     <Modal v-if="isModalOpen">
       <template v-slot:header>
         <span> 새로운 그룹을 생성합니다! 🎉 </span>
@@ -47,6 +49,7 @@ import Modal from "@/components/Modal.vue";
 import { Timestamp } from "@firebase/firestore";
 import { ListType } from "../types";
 import { IMenu } from "@/app/menu/types";
+import AddMenuBtn from "@/views/home/menu-list/components/AddMenuBtn.vue";
 
 export default defineComponent({
   props: ["menus"],
@@ -88,7 +91,7 @@ export default defineComponent({
     },
   },
   // eslint-disable-next-line vue/no-unused-components
-  components: { Modal },
+  components: { Modal, AddMenuBtn },
 });
 </script>
 

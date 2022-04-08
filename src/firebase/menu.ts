@@ -1,6 +1,55 @@
-import { collection, query, getDocs, addDoc, doc } from "@firebase/firestore";
+import {
+  addDoc,
+  collection,
+  getDocs,
+  limit,
+  query,
+  startAfter,
+} from "@firebase/firestore";
 import { db } from "@/main";
-import { IMenu, IMenuPayload } from "@/app/menu/types";
+import { IMenuPayload } from "@/app/menu/types";
+
+let lastDocuments = {};
+
+export const getFirstMenus = async () => {
+  try {
+    const firstPageQuery = query(collection(db, "Group"), limit(20));
+
+    const querySnapshot = await getDocs(firstPageQuery);
+    lastDocuments = querySnapshot.docs[querySnapshot.docs.length - 1];
+
+    const menus = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    return menus;
+  } catch (e: any) {
+    throw new Error(e);
+  }
+};
+
+export const getNextMenus = async () => {
+  try {
+    const nextPageQuery = query(
+      collection(db, "Group"),
+      limit(20),
+      startAfter(lastDocuments)
+    );
+
+    const querySnapshot = await getDocs(nextPageQuery);
+    lastDocuments = querySnapshot.docs[querySnapshot.docs.length - 1];
+
+    const menus = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    return menus;
+  } catch (e: any) {
+    throw new Error(e);
+  }
+};
 
 export const getMenus = async () => {
   try {
