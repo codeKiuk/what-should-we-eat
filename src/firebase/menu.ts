@@ -1,5 +1,4 @@
 import {
-  addDoc,
   collection,
   getDocs,
   limit,
@@ -7,8 +6,7 @@ import {
   startAfter,
 } from "@firebase/firestore";
 import { db, storage } from "@/main";
-import { IMenuPayload } from "@/app/menu/types";
-import { getDownloadURL, listAll, ref, uploadBytes } from "firebase/storage";
+import { listAll, ref, uploadBytes, UploadMetadata } from "firebase/storage";
 
 let lastDocuments = {};
 
@@ -72,9 +70,14 @@ export const createMenu = async ({
 }) => {
   const menuImagesDirRef = ref(storage, "menu-images");
   const menuImageRef = ref(menuImagesDirRef, menuName);
+  const metadata: UploadMetadata = {
+    customMetadata: {
+      id: String(Date.now()),
+    },
+  };
 
   try {
-    await uploadBytes(menuImageRef, file);
+    await uploadBytes(menuImageRef, file, metadata);
   } catch (e) {
     throw new Error("Failed to Create Menus");
   }

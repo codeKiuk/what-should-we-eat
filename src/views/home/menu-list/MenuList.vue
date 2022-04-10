@@ -97,7 +97,6 @@ function createGroup() {
 const clickedMenu = computed(() => {
   return menus.value.find((menu: IMenu) => menu.id === state.clickedMenuId);
 });
-// :src="require(`@/assets/menus/images/${menu.imgSrc}.png`)"
 </script>
 
 <style lang="scss" scoped>
