@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div>
     <button class="add-menu" @click="openModal">땡기는 메뉴가 없다면?</button>
 
     <Modal v-if="isModalOpen">
@@ -109,45 +109,45 @@ const uploadImage = async (event: Event) => {
 
   width: 100%;
   font-weight: bold;
+}
 
-  .slot-body {
-    @include column-center;
-    justify-content: flex-start;
+.slot-body {
+  @include column-center;
+  justify-content: flex-start;
+}
+
+label {
+  font-size: 11px;
+}
+.label-menu-image {
+  @include input;
+
+  &:hover {
+    cursor: pointer;
   }
+}
 
-  label {
-    font-size: 11px;
-  }
-  .label-menu-image {
-    @include input;
+.uploaded-file {
+  display: block;
+  color: $mainGreen;
+}
 
-    &:hover {
-      cursor: pointer;
-    }
-  }
+button {
+  @include button;
+}
 
-  .uploaded-file {
-    display: block;
-    color: $mainGreen;
-  }
+.add-menu {
+  width: 200px;
+  height: 40px;
+}
 
-  button {
-    @include button;
-  }
+input {
+  @include input;
 
-  .add-menu {
-    width: 200px;
-    height: 40px;
-  }
+  margin: 10px 0;
+}
 
-  input {
-    @include input;
-
-    margin: 10px 0;
-  }
-
-  .input-menu-image {
-    display: none;
-  }
+.input-menu-image {
+  display: none;
 }
 </style>

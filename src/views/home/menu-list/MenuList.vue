@@ -16,7 +16,10 @@
       </li>
     </ul>
 
-    <AddMenuBtn />
+    <footer>
+      <GetRandomMenuBtn />
+      <AddMenuBtn />
+    </footer>
 
     <Modal v-if="isModalOpen">
       <template v-slot:header>
@@ -43,6 +46,7 @@
 <script setup lang="ts">
 import Modal from "@/components/Modal.vue";
 import AddMenuBtn from "@/views/home/menu-list/components/AddMenuBtn.vue";
+import GetRandomMenuBtn from "@/views/home/menu-list/components/GetRandomMenuBtn.vue";
 import { Timestamp } from "@firebase/firestore";
 import { ListType, TListType } from "../types";
 import { IMenu } from "@/app/menu/types";
@@ -109,6 +113,11 @@ const clickedMenu = computed(() => {
 
   width: 100vw;
   margin: auto;
+
+  footer {
+    @include row-center;
+    justify-content: center;
+  }
 }
 
 .menu-container {

@@ -118,6 +118,10 @@ const timestamp = Timestamp;
 function participateInGroup() {
   isModalOpen.value = false;
 
+  if (clickedGroup.value?.lead.uid === currentUser.value.uid) {
+    alert("이미 참여하셨어요!");
+    return;
+  }
   if (
     clickedGroup.value &&
     clickedGroup.value.createdAt.toMillis() + TWENTY_MIN_BY_MS <
@@ -145,6 +149,8 @@ const clickedGroup = computed(() => {
     (group: IGroup) => group.id === state.clickedGroupId
   );
 });
+
+const currentUser = computed(() => store.getters["UserStore/getCurrentUser"]);
 </script>
 
 <style lang="scss" scoped>
