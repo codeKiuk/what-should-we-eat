@@ -6,8 +6,9 @@ import {
   query,
   startAfter,
 } from "@firebase/firestore";
-import { db } from "@/main";
+import { db, storage } from "@/main";
 import { IMenuPayload } from "@/app/menu/types";
+import { getDownloadURL, listAll, ref, uploadBytes } from "firebase/storage";
 
 let lastDocuments = {};
 
@@ -53,23 +54,27 @@ export const getNextMenus = async () => {
 
 export const getMenus = async () => {
   try {
-    const q = query(collection(db, "Menu"));
-    const querySnapshot = await getDocs(q);
-    const menus = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    return menus;
+    const menuImagesDirRef = ref(storage, "menu-images");
+
+    const menuRefs = await (await listAll(menuImagesDirRef)).items;
+    return menuRefs;
   } catch (e) {
     throw new Error("Failed to get Menus");
   }
 };
 
-export const createMenus = async (Menus: IMenuPayload[]) => {
+export const createMenu = async ({
+  menuName,
+  file,
+}: {
+  menuName: string;
+  file: File;
+}) => {
+  const menuImagesDirRef = ref(storage, "menu-images");
+  const menuImageRef = ref(menuImagesDirRef, menuName);
+
   try {
-    await Menus.forEach((menu) => {
-      addDoc(collection(db, "Menu"), menu);
-    });
+    await uploadBytes(menuImageRef, file);
   } catch (e) {
     throw new Error("Failed to Create Menus");
   }
