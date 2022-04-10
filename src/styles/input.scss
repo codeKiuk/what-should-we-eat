@@ -1,0 +1,16 @@
+@mixin input {
+  all: unset;
+
+  width: 200px;
+  height: 20px;
+
+  text-align: start;
+
+  padding: 5px;
+
+  font-size: 11px;
+
+  border: 1px solid whitesmoke;
+  border-radius: 10px;
+  box-shadow: whitesmoke 1px 1px 1px 0px;
+}

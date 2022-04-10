@@ -7,10 +7,7 @@
         :key="group.id"
         @click="setIsModalOpen($event, true, group.id)"
       >
-        <img
-          class="menu-image"
-          :src="require(`@/assets/menus/images/${group.menu.imgSrc}.png`)"
-        />
+        <img class="menu-image" :src="group.menu.imgSrc" />
         <span class="group-metadata-container">
           <span class="group-name">
             <span class="group-name-detail detail"> {{ group.menu.name }}</span>

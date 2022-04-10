@@ -3,7 +3,7 @@
     <button type="text" @click="getMenus">메뉴</button>
     <button type="text" @click="getGroups">점심 파티!</button>
   </header>
-  <GroupList v-if="listType === 'Groups'" :groups="groupsJoin" />
+  <GroupList v-if="state.listType === 'Groups'" :groups="groupsJoin" />
   <MenuList v-else :menus="menus" @setListType="setListType($event)" />
 </template>
 

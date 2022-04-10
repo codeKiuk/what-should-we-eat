@@ -1,3 +1,4 @@
+import { IMenu } from "../menu/types";
 import { IRootStore } from "../store";
 import { IGroupStore } from "./types";
 
@@ -14,7 +15,7 @@ export default {
       ...group,
       lead: users.find((user) => user.uid === group.lead) || group.lead,
       users: group.users.map((uid) => users.find((user) => user.uid === uid)),
-      menu: menus.find((menu) => menu.id === group.menu),
+      menu: menus.find((menu: IMenu) => menu.id === group.menu),
     }));
 
     return groupsJoin;

@@ -8,10 +8,7 @@
         :id="menu.id"
         @click="setIsModalOpen($event, true, menu.id)"
       >
-        <img
-          class="menu-image"
-          :src="require(`@/assets/menus/images/${menu.imgSrc}.png`)"
-        />
+        <img class="menu-image" :src="menu.imgSrc" loading="lazy" />
 
         <span class="menu-name">
           {{ menu.name }}
@@ -51,7 +48,14 @@ import { ListType, TListType } from "../types";
 import { IMenu } from "@/app/menu/types";
 import { useStore } from "vuex";
 import useModal from "@/hooks/useModal";
-import { computed, defineEmits, defineProps, reactive, toRefs } from "vue";
+import {
+  computed,
+  defineEmits,
+  defineProps,
+  onMounted,
+  reactive,
+  toRefs,
+} from "vue";
 
 const store = useStore();
 const { isModalOpen, closeModal } = useModal();
@@ -93,6 +97,7 @@ function createGroup() {
 const clickedMenu = computed(() => {
   return menus.value.find((menu: IMenu) => menu.id === state.clickedMenuId);
 });
+// :src="require(`@/assets/menus/images/${menu.imgSrc}.png`)"
 </script>
 
 <style lang="scss" scoped>
