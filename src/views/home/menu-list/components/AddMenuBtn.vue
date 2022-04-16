@@ -70,8 +70,10 @@ const state = reactive({
 const createMenu = () => {
   if (!state.menuName) {
     alert("메뉴 이름을 적어주세요!");
+    return;
   } else if (!state.file.name) {
     alert("메뉴 이미지를 넣어주세요!");
+    return;
   }
 
   store.dispatch("MenuStore/createMenuAsync", {
