@@ -60,8 +60,10 @@ import {
   reactive,
   toRefs,
 } from "vue";
+import { useRouter } from "vue-router";
 
 const store = useStore();
+const router = useRouter();
 const { isModalOpen, closeModal } = useModal();
 
 const props = defineProps<{
@@ -71,6 +73,13 @@ const props = defineProps<{
 const emits = defineEmits<{
   (e: "setListType", event: TListType): void;
 }>();
+
+onMounted(() => {
+  const isRoutedByGroupId = router.currentRoute.value.params.id ? true : false;
+
+  if (!isRoutedByGroupId) return;
+  emits("setListType", ListType.Groups);
+});
 
 const { menus } = toRefs(props);
 

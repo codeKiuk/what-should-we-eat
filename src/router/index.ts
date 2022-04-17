@@ -8,11 +8,23 @@ const routes: Array<RouteRecordRaw> = [
     path: "/",
     name: "Default",
     component: Home,
+    children: [
+      {
+        path: "/:id",
+        component: Home,
+      },
+    ],
   },
   {
     path: "/home",
     name: "Home",
     component: Home,
+    children: [
+      {
+        path: "/:id",
+        component: Home,
+      },
+    ],
   },
   {
     path: "/login",

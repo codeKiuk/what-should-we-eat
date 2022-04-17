@@ -61,7 +61,7 @@
       </li>
     </ul>
 
-    <Modal v-if="isModalOpen">
+    <Modal v-show="isModalOpen && !isParticipatedUser">
       <template v-slot:header>
         <span> 파티에 참여합니다! 🎉 </span>
       </template>
@@ -75,7 +75,7 @@
             {{ user.name }} 님
           </li>
           {{
-            participatedUsers.length
+            participatedUsers?.length
           }}
           명과 함께 먹을 수 있어요!
         </ul>
@@ -87,36 +87,62 @@
         <button type="text" @click="closeModal">다음에 참여할게요</button>
       </template>
     </Modal>
+
+    <Modal v-show="isModalOpen && isParticipatedUser">
+      <template v-slot:header>
+        <span> 파티에 이미 참여하셨어요! 🎉 </span>
+      </template>
+      <template v-slot:body>
+        <span class="share-link-text" @click="shareLink">
+          파티 링크를 공유할까요?
+        </span>
+      </template>
+      <template v-slot:footer-yes-button>
+        <button type="text" @click="shareLink">네!</button>
+      </template>
+      <template v-slot:footer-close-button>
+        <button type="text" @click="closeModal">다음에 공유할게요</button>
+      </template>
+    </Modal>
   </div>
 </template>
 
 <script setup lang="ts">
 import { Timestamp } from "@firebase/firestore";
-import { computed, defineProps, reactive, toRefs } from "vue";
+import { computed, defineProps, onMounted, reactive, toRefs } from "vue";
 import { useStore } from "vuex";
 import Modal from "@/components/Modal.vue";
-import { IGroup } from "@/app/group/types";
+import { IGroupJoin } from "@/app/group/types";
 import { TWENTY_MIN_BY_MS } from "@/assets/constants/constants";
 import useModal from "@/hooks/useModal";
+import { useRouter } from "vue-router";
+import { ListType, TListType } from "../types";
 
 const store = useStore();
-const { isModalOpen, closeModal } = useModal();
+const router = useRouter();
+const { isModalOpen, closeModal, openModal } = useModal();
+const timestamp = Timestamp;
 
 const props = defineProps<{
-  groups: IGroup[];
+  groups: IGroupJoin[];
 }>();
 
-const { groups } = toRefs(props);
-
 const state = reactive({
-  clickedGroupId: "",
+  clickedGroupId: router.currentRoute.value.params.id || "",
   TWENTY_MIN_BY_MS: TWENTY_MIN_BY_MS,
 });
 
-const timestamp = Timestamp;
+onMounted(() => {
+  const isRoutedByGroupId = router.currentRoute.value.params.id ? true : false;
+
+  if (!isRoutedByGroupId) return;
+  openModal();
+});
+
+const { groups } = toRefs(props);
 
 function participateInGroup() {
-  isModalOpen.value = false;
+  closeModal();
 
   if (clickedGroup.value?.lead.uid === currentUser.value.uid) {
     alert("이미 참여하셨어요!");
@@ -139,18 +165,34 @@ function setIsModalOpen(event: Event, isOpen: boolean, groupId: string) {
   state.clickedGroupId = groupId;
 }
 
+async function shareLink() {
+  await navigator.clipboard.writeText(
+    `https://what-should-we-eat.verel.app/${state.clickedGroupId}`
+  );
+
+  alert("링크를 클립보드에 저장했어요!");
+  closeModal();
+}
+
 const participatedUsers = computed(() => {
-  return groups.value.find((group: IGroup) => group.id === state.clickedGroupId)
-    ?.users;
+  return groups.value.find(
+    (group: IGroupJoin) => group.id === state.clickedGroupId
+  )?.users;
 });
 
 const clickedGroup = computed(() => {
   return groups.value.find(
-    (group: IGroup) => group.id === state.clickedGroupId
+    (group: IGroupJoin) => group.id === state.clickedGroupId
   );
 });
 
 const currentUser = computed(() => store.getters["UserStore/getCurrentUser"]);
+
+const isParticipatedUser = computed(() =>
+  clickedGroup.value?.users
+    .map((user) => user.uid)
+    .includes(currentUser.value.uid)
+);
 </script>
 
 <style lang="scss" scoped>
@@ -246,6 +288,15 @@ const currentUser = computed(() => store.getters["UserStore/getCurrentUser"]);
     @include mainGreenFont;
     font-weight: bold;
     padding: 10px 0;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  .share-link-text {
+    font-weight: bold;
+    color: $mainGreen;
 
     &:hover {
       cursor: pointer;
