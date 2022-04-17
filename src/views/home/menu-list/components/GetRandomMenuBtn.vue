@@ -39,7 +39,7 @@ function rollMenus() {
   return new Promise((resolve) =>
     setTimeout(() => {
       resolve(randomMenus[getRandomNum(0, limit - 1)]);
-    }, 100)
+    }, 40)
   );
 }
 
