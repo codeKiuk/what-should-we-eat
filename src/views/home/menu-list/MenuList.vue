@@ -166,6 +166,8 @@ const clickedMenu = computed(() => {
     width: calc(100% + 20px);
     height: 190px;
 
+    object-fit: cover;
+
     &:hover {
       cursor: pointer;
     }
