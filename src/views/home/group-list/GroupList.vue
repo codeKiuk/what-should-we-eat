@@ -167,7 +167,7 @@ function setIsModalOpen(event: Event, isOpen: boolean, groupId: string) {
 
 async function shareLink() {
   await navigator.clipboard.writeText(
-    `https://what-should-we-eat.verel.app/${state.clickedGroupId}`
+    `https://what-should-we-eat.vercel.app/#/${state.clickedGroupId}`
   );
 
   alert("링크를 클립보드에 저장했어요!");
