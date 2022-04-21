@@ -93,6 +93,19 @@
         <span> 파티에 이미 참여하셨어요! 🎉 </span>
       </template>
       <template v-slot:body>
+        <ul>
+          <li
+            class="group-detail detail"
+            v-for="user in participatedUsers"
+            :key="user.id"
+          >
+            {{ user.name }} 님
+          </li>
+          {{
+            participatedUsers?.length
+          }}
+          명과 함께 먹을 수 있어요!
+        </ul>
         <span class="share-link-text" @click="shareLink">
           파티 링크를 공유할까요?
         </span>
